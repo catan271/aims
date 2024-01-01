@@ -7,9 +7,14 @@ import java.sql.DriverManager;
 import java.util.logging.Logger;
 
 public class AIMSDB {
+
     private static Logger LOGGER = Utils.getLogger(Connection.class.getName());
     private static Connection connect;
 
+
+    /**
+     * @return Connection
+     */
     public static Connection getConnection() {
         if (connect != null) {
             return connect;
@@ -24,7 +29,11 @@ public class AIMSDB {
         }
         return connect;
     }
-    
+
+
+    /**
+     * @param args
+     */
     public static void main(String[] args) {
         AIMSDB.getConnection();
     }

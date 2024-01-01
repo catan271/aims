@@ -103,5 +103,5 @@ CREATE TABLE "aims"."Transaction"
         FOREIGN KEY ("orderID")
             REFERENCES "Order" ("id")
 );
-CREATE INDEX "aims"."Transaction.fk_transaction_order_idx" ON "Transaction" ("orderID");
+CREATE INDEX "aims"."Transaction.fk_transaction_order_idx" ON PaymentTransaction ("orderID");
 COMMIT;

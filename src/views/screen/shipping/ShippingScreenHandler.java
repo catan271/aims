@@ -50,7 +50,11 @@ public class ShippingScreenHandler extends BaseScreenHandler implements Initiali
         super(stage, screenPath);
         this.order = order;
     }
-    
+
+    /**
+     * @param arg0
+     * @param arg1
+     */
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         final BooleanProperty firstTime = new SimpleBooleanProperty(true); // Variable to store the focus on stage load
@@ -62,7 +66,13 @@ public class ShippingScreenHandler extends BaseScreenHandler implements Initiali
         });
         this.province.getItems().addAll(Configs.PROVINCES);
     }
-    
+
+    /**
+     * @param event
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws SQLException
+     */
     @FXML
     void submitDeliveryInfo(MouseEvent event) throws IOException, InterruptedException, SQLException {
 
@@ -125,7 +135,10 @@ public class ShippingScreenHandler extends BaseScreenHandler implements Initiali
         DeliveryMethodsScreenHandler.setBController(getBController());
         DeliveryMethodsScreenHandler.show();
     }
-    
+
+    /**
+     * @return PlaceOrderController
+     */
     public PlaceOrderController getBController() {
         return (PlaceOrderController) super.getBController();
     }

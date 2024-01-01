@@ -3,6 +3,7 @@ package common.exception;
 /**
  * The PlaceOrderException wraps all unchecked exceptions You can use this
  * exception to inform
+ *
  */
 public class PlaceOrderException extends AimsException {
 

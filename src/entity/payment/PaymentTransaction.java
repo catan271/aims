@@ -24,7 +24,11 @@ public class PaymentTransaction {
         this.amount = amount;
         this.createdAt = createdAt;
     }
-    
+
+
+    /**
+     * @return String
+     */
     public String getErrorCode() {
         return errorCode;
     }

@@ -67,7 +67,7 @@ public class CartScreenHandler extends BaseScreenHandler {
         btnPlaceOrder.setOnMouseClicked(e -> {
 
             try {
-                requestOrder();
+                requestToPlaceOrder();
             } catch (SQLException | IOException exp) {
 
                 exp.printStackTrace();
@@ -76,19 +76,36 @@ public class CartScreenHandler extends BaseScreenHandler {
 
         });
     }
-    
+
+
+    /**
+     * @return Label
+     */
     public Label getLabelAmount() {
         return labelAmount;
     }
-    
+
+
+    /**
+     * @return Label
+     */
     public Label getLabelSubtotal() {
         return labelSubtotal;
     }
-    
+
+
+    /**
+     * @return ViewCartController
+     */
     public ViewCartController getBController() {
         return (ViewCartController) super.getBController();
     }
-    
+
+
+    /**
+     * @param prevScreen
+     * @throws SQLException
+     */
     public void requestToViewCart(BaseScreenHandler prevScreen) throws SQLException {
         setPreviousScreen(prevScreen);
         setScreenTitle("Cart Screen");
@@ -96,8 +113,13 @@ public class CartScreenHandler extends BaseScreenHandler {
         displayCartWithMediaAvailability();
         show();
     }
-    
-    public void requestOrder() throws SQLException, IOException {
+
+
+    /**
+     * @throws SQLException
+     * @throws IOException
+     */
+    public void requestToPlaceOrder() throws SQLException, IOException {
         try {
             // create placeOrderController and process the order
             var placeOrderController = new PlaceOrderController();
@@ -127,7 +149,11 @@ public class CartScreenHandler extends BaseScreenHandler {
             displayCartWithMediaAvailability();
         }
     }
-    
+
+
+    /**
+     * @throws SQLException
+     */
     public void updateCart() throws SQLException {
         getBController().checkAvailabilityOfProduct();
         displayCartWithMediaAvailability();

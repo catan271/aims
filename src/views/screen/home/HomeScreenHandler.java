@@ -1,16 +1,14 @@
 package views.screen.home;
 
 import common.exception.ViewCartException;
+import controller.AuthenticationController;
 import controller.HomeController;
 import controller.ViewCartController;
 import entity.cart.Cart;
 import entity.media.Media;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitMenuButton;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -46,6 +44,9 @@ public class HomeScreenHandler extends BaseScreenHandler implements Initializabl
     private ImageView cartImage;
 
     @FXML
+    private Button loginBtn;
+
+    @FXML
     private VBox vboxMedia1;
 
     @FXML
@@ -65,11 +66,17 @@ public class HomeScreenHandler extends BaseScreenHandler implements Initializabl
     public HomeScreenHandler(Stage stage, String screenPath) throws IOException {
         super(stage, screenPath);
     }
-    
+
+    /**
+     * @return Label
+     */
     public Label getNumMediaCartLabel() {
         return this.numMediaInCart;
     }
-    
+
+    /**
+     * @return HomeController
+     */
     public HomeController getBController() {
         return (HomeController) super.getBController();
     }
@@ -79,7 +86,11 @@ public class HomeScreenHandler extends BaseScreenHandler implements Initializabl
         numMediaInCart.setText(String.valueOf(Cart.getCart().getListMedia().size()) + " media");
         super.show();
     }
-    
+
+    /**
+     * @param arg0
+     * @param arg1
+     */
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         setBController(new HomeController());
@@ -112,6 +123,19 @@ public class HomeScreenHandler extends BaseScreenHandler implements Initializabl
                 throw new ViewCartException(Arrays.toString(e1.getStackTrace()).replaceAll(", ", "\n"));
             }
         });
+
+        loginBtn.setOnMouseClicked(e -> {
+            LoginScreenHandler loginScreen;
+            try {
+                LOGGER.info("User click to login");
+                loginScreen = new LoginScreenHandler(this.stage, Configs.LOGIN_SCREEN_PATH);
+                loginScreen.setHomeScreenHandler(this);
+                loginScreen.setBController(new AuthenticationController());
+                loginScreen.show();
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+        });
         addMediaHome(this.homeItems);
         addMenuItem(0, "Book", splitMenuBtnSearch);
         addMenuItem(1, "DVD", splitMenuBtnSearch);
@@ -128,7 +152,10 @@ public class HomeScreenHandler extends BaseScreenHandler implements Initializabl
         Image img2 = new Image(file2.toURI().toString());
         cartImage.setImage(img2);
     }
-    
+
+    /**
+     * @param items
+     */
     public void addMediaHome(List items) {
         ArrayList mediaItems = (ArrayList) ((ArrayList) items).clone();
         hboxMedia.getChildren().forEach(node -> {
@@ -148,7 +175,12 @@ public class HomeScreenHandler extends BaseScreenHandler implements Initializabl
             return;
         }
     }
-    
+
+    /**
+     * @param position
+     * @param text
+     * @param menuButton
+     */
     private void addMenuItem(int position, String text, MenuButton menuButton) {
         MenuItem menuItem = new MenuItem();
         Label label = new Label();

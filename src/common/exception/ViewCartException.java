@@ -1,8 +1,11 @@
 package common.exception;
 
+;
+
 /**
  * The ViewCartException wraps all unchecked exceptions You can use this
  * exception to inform
+ *
  */
 public class ViewCartException extends AimsException {
 

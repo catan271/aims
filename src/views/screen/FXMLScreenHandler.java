@@ -19,17 +19,28 @@ public class FXMLScreenHandler {
         this.loader.setController(this);
         this.content = (AnchorPane) loader.load();
     }
-    
+
+
+    /**
+     * @return AnchorPane
+     */
     public AnchorPane getContent() {
         return this.content;
     }
-    
+
+
+    /**
+     * @return FXMLLoader
+     */
     public FXMLLoader getLoader() {
         return this.loader;
     }
 
     /**
      * This is a set image operation.
+     *
+     * @param imv  Link image
+     * @param path Path of image
      */
     public void setImage(ImageView imv, String path) {
         File file = new File(path);

@@ -54,6 +54,10 @@ public class Shipment {
         this.shipType =  shipType;
     }
 
+
+    /**
+     * @return String
+     */
     //getter setter method
     public String getDeliveryInstruction() {
         return this.deliveryInstruction;

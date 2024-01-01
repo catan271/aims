@@ -22,6 +22,8 @@ public class Order {
     private String name;
     private String province;
     private String instruction;
+    private String address;
+    private String phone;
 
     public String getInstruction() {
         return instruction;
@@ -30,8 +32,6 @@ public class Order {
     public void setInstruction(String instruction) {
         this.instruction = instruction;
     }
-
-    private String address;
 
     public List<OrderMedia> getLstOrderMedia() {
         return lstOrderMedia;
@@ -81,7 +81,6 @@ public class Order {
         this.id = id;
     }
 
-    private String phone;
     private Integer id;
 
     public Order() {
@@ -137,26 +136,48 @@ public class Order {
         }
     }
 
+
+    /**
+     * @param om
+     */
     public void addOrderMedia(OrderMedia om) {
         this.lstOrderMedia.add(om);
     }
 
+
+    /**
+     * @param om
+     */
     public void removeOrderMedia(OrderMedia om) {
         this.lstOrderMedia.remove(om);
     }
-    
+
+
+    /**
+     * @return List
+     */
     public List<OrderMedia> getlstOrderMedia() {
         return this.lstOrderMedia;
     }
-    
+
+
+    /**
+     * @param lstOrderMedia
+     */
     public void setlstOrderMedia(List lstOrderMedia) {
         this.lstOrderMedia = lstOrderMedia;
     }
-    
+
+    /**
+     * @return int
+     */
     public int getShippingFees() {
         return shippingFees;
     }
-    
+
+    /**
+     * @param shippingFees
+     */
     public void setShippingFees(int shippingFees) {
         this.shippingFees = shippingFees;
     }
@@ -168,7 +189,10 @@ public class Order {
     public void setShipment(Shipment shipment) {
         this.shipment = shipment;
     }
-    
+
+    /**
+     * @return int
+     */
     public int getAmount() {
         double amount = 0;
         for (Object object : lstOrderMedia) {

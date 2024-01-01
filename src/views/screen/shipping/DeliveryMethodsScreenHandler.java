@@ -46,7 +46,12 @@ public class DeliveryMethodsScreenHandler extends BaseScreenHandler {
         super(stage, screenPath);
         this.order = order;
     }
-    
+
+
+    /**
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void updateDeliveryMethodInfo(MouseEvent event) throws IOException {
         String deliveryInstructionString = new String(deliveryInstruction.getText());
@@ -79,6 +84,11 @@ public class DeliveryMethodsScreenHandler extends BaseScreenHandler {
         InvoiceScreenHandler.show();
     }
 
+
+    /**
+     * @param event
+     * @throws IOException
+     */
     @FXML
     private void handleBack(MouseEvent event) throws IOException {
         // Back to previous screen
@@ -91,6 +101,10 @@ public class DeliveryMethodsScreenHandler extends BaseScreenHandler {
         ShippingScreenHandler.show();
     }
 
+
+    /**
+     * @param event
+     */
     @FXML
     private void handleDeliveryType(ActionEvent event) {
         if (placeOrderValue.isSelected()) {
@@ -104,7 +118,11 @@ public class DeliveryMethodsScreenHandler extends BaseScreenHandler {
         }
         handleProvinceError(event);
     }
-    
+
+
+    /**
+     * @param event
+     */
     @FXML
     private void handleProvinceError(ActionEvent event) {
         String province = new String(order.getProvince());
@@ -145,6 +163,9 @@ public class DeliveryMethodsScreenHandler extends BaseScreenHandler {
         }
     }
 
+    /**
+     * @return PlaceOrderController
+     */
     public PlaceOrderController getBController() {
         return (PlaceOrderController) super.getBController();
     }

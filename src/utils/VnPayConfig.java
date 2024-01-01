@@ -1,4 +1,4 @@
-package subsystem.vnPay;
+package utils;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -10,16 +10,17 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.regex.Pattern;
 
-/**
- * @author CTT VNPAY
- */
-public class Config {
+public class VnPayConfig {
 
     private static final Pattern pattern = Pattern.compile("\\{\"IP\":\"(?<ip>.*)\"\\}");
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
+
     public static String vnp_ReturnUrl = "http://127.0.0.1:50387";
-    public static String vnp_TmnCode = "TXOOZNX4";
-    public static String secretKey = "HUQHTRVXVRGJJWHMBFCAUBAXOSAJBIND";
+
+    public static String vnp_TmnCode = "QMPVL247";
+
+    public static String secretKey = "ARWCMWFRGXNHBJPJJBGRTNOCVPIYZGME";
+
     public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
 
     public static String md5(String message) {
@@ -58,7 +59,7 @@ public class Config {
         return digest;
     }
 
-    // Util for VNPay
+    //Util for VNPAY
     public static String hashAllFields(Map fields) {
         List fieldNames = new ArrayList(fields.keySet());
         Collections.sort(fieldNames);

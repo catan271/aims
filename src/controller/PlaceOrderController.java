@@ -14,7 +14,7 @@ import java.util.Random;
 import java.util.logging.Logger;
 
 public class PlaceOrderController extends BaseController {
-    // common coupling
+
     /**
      * Just for logging purpose
      */
@@ -22,6 +22,9 @@ public class PlaceOrderController extends BaseController {
 
     /**
      * This method checks the avalibility of product when user click PlaceOrder
+     * button
+     *
+     * @throws SQLException
      */
     public void placeOrder() throws SQLException {
         Cart.getCart().checkAvailabilityOfProduct();
@@ -29,6 +32,9 @@ public class PlaceOrderController extends BaseController {
 
     /**
      * This method creates the new Order based on the Cart
+     *
+     * @return Order
+     * @throws SQLException
      */
     public Order createOrder() throws SQLException {
         Order order = new Order();
@@ -44,6 +50,9 @@ public class PlaceOrderController extends BaseController {
 
     /**
      * This method creates the new Invoice based on order
+     *
+     * @param order
+     * @return Invoice
      */
     public Invoice createInvoice(Order order) {
 
@@ -53,6 +62,10 @@ public class PlaceOrderController extends BaseController {
 
     /**
      * This method takes responsibility for processing the shipping info from user
+     *
+     * @param info
+     * @throws InterruptedException
+     * @throws IOException
      */
     public void processDeliveryInfo(HashMap info) throws InterruptedException, IOException {
         validateDeliveryInfo(info);
@@ -60,11 +73,20 @@ public class PlaceOrderController extends BaseController {
 
     /**
      * The method validates the info
+     *
+     * @param info
+     * @throws InterruptedException
+     * @throws IOException
      */
     public void validateDeliveryInfo(HashMap<String, String> info) throws InterruptedException, IOException {
 
     }
 
+
+    /**
+     * @param phoneNumber
+     * @return boolean
+     */
     public boolean validatePhoneNumber(String phoneNumber) {
         if (phoneNumber.length() != 10)
             return false;
@@ -79,6 +101,11 @@ public class PlaceOrderController extends BaseController {
         return true;
     }
 
+
+    /**
+     * @param name
+     * @return boolean
+     */
     public boolean validateContainLetterAndNoEmpty(String name) {
         // Check name is not null
         if (name == null)
@@ -95,6 +122,9 @@ public class PlaceOrderController extends BaseController {
 
     /**
      * This method calculates the shipping fees of order
+     *
+     * @param order
+     * @return shippingFee
      */
     public int calculateShippingFee(int amount) {
         Random rand = new Random();
@@ -104,6 +134,10 @@ public class PlaceOrderController extends BaseController {
 
     /**
      * This method get product available place rush order media
+     *
+     * @param order
+     * @return media
+     * @throws SQLException
      */
     public Media getProductAvailablePlaceRush(Order order) throws SQLException {
         Media media = new Media();

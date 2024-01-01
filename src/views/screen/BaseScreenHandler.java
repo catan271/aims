@@ -6,9 +6,12 @@ import javafx.stage.Stage;
 import views.screen.home.HomeScreenHandler;
 
 import java.io.IOException;
+import java.net.URL;
+import java.sql.SQLException;
 import java.util.Hashtable;
+import java.util.ResourceBundle;
 
-public class BaseScreenHandler extends FXMLScreenHandler {
+public abstract class BaseScreenHandler extends FXMLScreenHandler {
 
     protected final Stage stage;
     protected HomeScreenHandler homeScreenHandler;
@@ -28,10 +31,16 @@ public class BaseScreenHandler extends FXMLScreenHandler {
         this.stage = stage;
     }
 
+    /**
+     * @return BaseScreenHandler
+     */
     public BaseScreenHandler getPreviousScreen() {
         return this.prev;
     }
-    
+
+    /**
+     * @param prev
+     */
     public void setPreviousScreen(BaseScreenHandler prev) {
         this.prev = prev;
     }
@@ -43,23 +52,40 @@ public class BaseScreenHandler extends FXMLScreenHandler {
         this.stage.setScene(this.scene);
         this.stage.show();
     }
-    
+
+
+    /**
+     * @param string
+     */
     public void setScreenTitle(String string) {
         this.stage.setTitle(string);
     }
-    
+
+    /**
+     * @return BaseController
+     */
     public BaseController getBController() {
         return this.bController;
     }
-    
+
+    /**
+     * @param bController
+     */
     public void setBController(BaseController bController) {
         this.bController = bController;
     }
 
+    /**
+     * @param messages
+     */
     public void forward(Hashtable messages) {
         this.messages = messages;
     }
-    
+
+
+    /**
+     * @param HomeScreenHandler
+     */
     public void setHomeScreenHandler(HomeScreenHandler HomeScreenHandler) {
         this.homeScreenHandler = HomeScreenHandler;
     }

@@ -13,10 +13,20 @@ import views.screen.home.HomeScreenHandler;
 import java.io.IOException;
 
 public class App extends Application {
+
     @FXML
     ImageView logo;
 
+    /**
+     * @param args
+     */
+    public static void main(String[] args) {
+        launch(args);
+    }
 
+    /**
+     * @param primaryStage
+     */
     @Override
     public void start(Stage primaryStage) {
         try {
@@ -60,8 +70,5 @@ public class App extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-    public static void main(String[] args) {
-        launch(args);
     }
 }

@@ -8,8 +8,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
-import subsystem.vnPay.Config;
 import utils.Configs;
+import utils.VnPayConfig;
 import views.screen.BaseScreenHandler;
 
 import java.io.IOException;
@@ -62,9 +62,12 @@ public class PaymentScreenHandler extends BaseScreenHandler {
         }
         return params;
     }
-    
+
+    /**
+     * @param newValue url vnPay return về
+     */
     private void handleUrlChanged(String newValue) {
-        if (newValue.contains(Config.vnp_ReturnUrl)) {
+        if (newValue.contains(VnPayConfig.vnp_ReturnUrl)) {
             try {
                 URI uri = new URI(newValue);
                 String query = uri.getQuery();
@@ -81,7 +84,11 @@ public class PaymentScreenHandler extends BaseScreenHandler {
             }
         }
     }
-    
+
+    /**
+     * @param res kết quả vnPay trả về
+     * @throws IOException
+     */
     void payOrder(Map<String, String> res) throws IOException {
 
         var ctrl = (PaymentController) super.getBController();

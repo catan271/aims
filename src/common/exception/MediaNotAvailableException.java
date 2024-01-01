@@ -5,6 +5,7 @@ package common.exception;
 /**
  * The MediaNotAvailableException wraps all unchecked exceptions You can use this
  * exception to inform
+ *
  */
 public class MediaNotAvailableException extends AimsException {
 

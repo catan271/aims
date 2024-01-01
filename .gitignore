@@ -7,3 +7,4 @@ aims.session.sql
 *.ipynb
 test/notebook
 /out
+/doc

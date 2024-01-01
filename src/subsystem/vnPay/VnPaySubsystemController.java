@@ -9,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import utils.VnPayConfig;
 
 public class VnPaySubsystemController {
 
@@ -27,38 +28,6 @@ public class VnPaySubsystemController {
         return null;
     }
 
-
-//  /**
-//   * @param data
-//   * @return String
-//   */
-//  private String generateData(Map<String, Object> data) {
-//    return ((MyMap) data).toJSON();
-//  }
-
-//  public static String convertToQueryString(Map<String, Object> paramMap) throws UnsupportedEncodingException {
-//    StringBuilder queryString = new StringBuilder();
-//
-//    for (Map.Entry<String, Object> entry : paramMap.entrySet()) {
-//      String key = entry.getKey();
-//      Object value = entry.getValue();
-//
-//      // Kiểm tra nếu giá trị là null
-//      if (value != null) {
-//        // Chuyển đổi giá trị thành chuỗi
-//        String encodedValue = URLEncoder.encode(value.toString(), "UTF-8");
-//
-//        // Thêm vào chuỗi tham số truy vấn
-//        if (queryString.length() > 0) {
-//          queryString.append("&");
-//        }
-//        queryString.append(key).append("=").append(encodedValue);
-//      }
-//    }
-//
-//    return queryString.toString();
-//  }
-
     /**
      * @param money
      * @param contents
@@ -72,10 +41,10 @@ public class VnPaySubsystemController {
         long amount = money * 100L * 1000;
 
 
-        String vnp_TxnRef = Config.getRandomNumber(8);
-        String vnp_IpAddr = Config.getIpAddress();
+        String vnp_TxnRef = VnPayConfig.getRandomNumber(8);
+        String vnp_IpAddr = VnPayConfig.getIpAddress();
 
-        String vnp_TmnCode = Config.vnp_TmnCode;
+        String vnp_TmnCode = VnPayConfig.vnp_TmnCode;
 
         Map<String, String> vnp_Params = new HashMap<>();
         vnp_Params.put("vnp_Version", vnp_Version);
@@ -93,7 +62,7 @@ public class VnPaySubsystemController {
 
         vnp_Params.put("vnp_Locale", "vn");
 
-        vnp_Params.put("vnp_ReturnUrl", Config.vnp_ReturnUrl);
+        vnp_Params.put("vnp_ReturnUrl", VnPayConfig.vnp_ReturnUrl);
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
 
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
@@ -129,9 +98,9 @@ public class VnPaySubsystemController {
             }
         }
         String queryUrl = query.toString();
-        String vnp_SecureHash = Config.hmacSHA512(Config.secretKey, hashData.toString());
+        String vnp_SecureHash = VnPayConfig.hmacSHA512(VnPayConfig.secretKey, hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
-        return Config.vnp_PayUrl + "?" + queryUrl;
+        return VnPayConfig.vnp_PayUrl + "?" + queryUrl;
     }
 
 

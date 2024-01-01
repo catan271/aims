@@ -10,6 +10,7 @@ import java.util.Map;
  * To create a new JSON object,
  * JSON jsonObject = new JSON();
  * jsonObject.put("key", value);
+ *
  */
 public class MyMap extends LinkedHashMap<String, Object> {
     private static final long serialVersionUID = 1L;
@@ -18,6 +19,12 @@ public class MyMap extends LinkedHashMap<String, Object> {
     /**
      * Return a {@link java.util.Map Map} that represents the mapping among
      * attribute names and their values of an object.
+     *
+     * @param obj - an arbitrary {@link java.lang.Object Object}.
+     * @return a {@link java.util.Map Map} mapping the attribute names and its
+     * values.
+     * @throws IllegalAccessException
+     * @throws IllegalArgumentException
      * https://stackoverflow.com/questions/52406467/convert-object-to-map-in-java
      */
     public static Map<String, Object> toMyMap(Object obj) throws IllegalArgumentException, IllegalAccessException {
@@ -41,6 +48,11 @@ public class MyMap extends LinkedHashMap<String, Object> {
     /**
      * Return a {@link java.lang.String String} that represents the term in between
      * 2 double quote.
+     *
+     * @param str - {@link java.lang.String String}
+     *            idx - the index of the open quote
+     * @return the term as {@link java.lang.String String}
+     * @throws IllegalArgumentException
      */
     private static String getNextTerm(String str, int idx) {
         if (str == null || idx >= str.length() || str.charAt(idx) != '"') {
@@ -68,6 +80,11 @@ public class MyMap extends LinkedHashMap<String, Object> {
 
     /**
      * Return a {@link utils.MyMap MyMap} that represents the interested substring in a {@link java.lang.String String}.
+     *
+     * @param str - {@link java.lang.String String}
+     *            idx - the index of the first character in the interested substring in the {@link java.lang.String String}
+     * @return the term as {@link utils.MyMap MyMap}
+     * @throws IllegalArgumentException
      */
     public static MyMap toMyMap(String str, int idx) throws IllegalArgumentException {
         if (str == null || str.length() < 2 || str.charAt(idx) != '{') {
@@ -154,6 +171,9 @@ public class MyMap extends LinkedHashMap<String, Object> {
 
     /**
      * Return a {@link java.lang.String String} that represents the JSON object.
+     *
+     * @return a {@link java.lang.String String}.
+     * https://hg.openjdk.java.net/jdk8/jdk8/jdk/file/tip/src/share/classes/java/util/Hashtable.java
      */
     public String toJSON() {
         int max = size() - 1;

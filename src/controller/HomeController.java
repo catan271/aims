@@ -13,6 +13,9 @@ public class HomeController extends BaseController {
 
     /**
      * this method gets all Media in DB and return back to home to display
+     *
+     * @return List[Media]
+     * @throws SQLException
      */
     public List getAllMedia() throws SQLException {
         return new Media().getAllMedia();

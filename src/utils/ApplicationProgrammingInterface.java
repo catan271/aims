@@ -20,6 +20,11 @@ public class ApplicationProgrammingInterface {
 
     /**
      * Get methods.
+     *
+     * @param url   A link to use post method
+     * @param token data to past
+     * @return response
+     * @throws Exception when this exceptional condition occurs
      */
     public static String get(String url, String token) throws Exception {
         LOGGER.info("Request URL: " + url + "\n");
@@ -38,6 +43,14 @@ public class ApplicationProgrammingInterface {
         return respone.substring(0, respone.length() - 1).toString();
     }
 
+
+    /**
+     * @param url
+     * @param requestMethod
+     * @param token
+     * @return HttpURLConnection
+     * @throws IOException
+     */
     private static HttpURLConnection generateConnection(String url, String requestMethod, String token) throws IOException {
         final var conn = (HttpURLConnection) extracted(url).openConnection();
         conn.setDoInput(true);
@@ -52,6 +65,11 @@ public class ApplicationProgrammingInterface {
 
     /**
      * Post methods.
+     *
+     * @param url  A link to use post method
+     * @param data Data to pass
+     * @return response in String type
+     * @throws IOException when this exceptional condition occurs
      */
     public static String post(String url, String data) throws IOException {
         allowMethods("PATCH");
@@ -76,12 +94,20 @@ public class ApplicationProgrammingInterface {
         LOGGER.info("Respone Info: " + response.toString());
         return response.toString();
     }
-    
+
+    /**
+     * @param url
+     * @return URL
+     * @throws MalformedURLException
+     */
     private static URL extracted(String url) throws MalformedURLException {
         final URL line_api_url = new URL(url);
         return line_api_url;
     }
-    
+
+    /**
+     * @param methods
+     */
     private static void allowMethods(String... methods) {
         try {
             Field methodsField = HttpURLConnection.class.getDeclaredField("methods");
