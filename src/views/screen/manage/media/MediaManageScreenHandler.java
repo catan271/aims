@@ -106,13 +106,24 @@ public class MediaManageScreenHandler extends ManageScreenHandler implements Ini
                 }
 
                 HBox buttonsHBox = new HBox(editButton, deleteButton);
-                editButton.setOnAction(e -> {
-                    redirectToBookForm(media.getId());
-                });
 
-                deleteButton.setOnAction(e -> {
+                switch (media.getType()) {
+                    case "book": {
+                        editButton.setOnAction(e -> {
+                            redirectToBookForm(media.getId());
+                        });
 
-                });
+                        deleteButton.setOnAction(e -> {
+                            try {
+                                getBController().deleteBookById(media.getId());
+                                openMediaManage();
+                            } catch (SQLException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                        });
+                    }
+                }
+
                 setGraphic(buttonsHBox);
             }
         });

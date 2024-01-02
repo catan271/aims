@@ -33,16 +33,16 @@ public class Media {
         stm = AIMSDB.getConnection().createStatement();
     }
 
-    public Media(int id, String title, String category, int price, int quantity, String type) {
+    public Media(int id, String title, String category, int price, int quantity, String imageURL, String type) {
         this.id = id;
         this.title = title;
         this.category = category;
         this.price = price;
         this.quantity = quantity;
+        this.imageURL = imageURL;
         this.type = type;
 
         this.value = 0;
-        this.imageURL = "";
 
         //stm = AIMSDB.getConnection().createStatement();
     }
@@ -108,11 +108,18 @@ public class Media {
 
     public void create() throws SQLException {
         String sql = "INSERT INTO Media (title, value, price, quantity, category, \"imageUrl\", type) "
-                + "VALUES (\'" + title + "\'," + value + "," + price + "," + quantity + ",\'" + category + "\',\'" + imageURL + "\',\'" + type + "\') "
+                + "VALUES (?,?,?,?,?,?,?) "
                 + ";";
         PreparedStatement stm = AIMSDB.getConnection().prepareStatement(sql, new String[] { "id" });
+        stm.setString(1, title);
+        stm.setInt(2, value);
+        stm.setInt(3, price);
+        stm.setInt(4, quantity);
+        stm.setString(5, category);
+        stm.setString(6, imageURL);
+        stm.setString(7, type);
         if (stm.executeUpdate() == 0) {
-            throw new SQLException("Creating user failed, no rows affected.");
+            throw new SQLException("Creating failed, no rows affected.");
         }
         ResultSet res = stm.getGeneratedKeys();
         if (res.next()) {
@@ -125,17 +132,26 @@ public class Media {
             create();
         } else {
             String sql = "UPDATE Media SET "
-                    + "title = \'" + title + "\',"
-                    + "value = " + value + ","
-                    + "price = " + price + ","
-                    + "quantity = " + quantity + ","
-                    + "category = \'" + category + "\',"
-                    + "\"imageUrl\" = \'" + imageURL + "\',"
-                    + "type = \'" + type + "\' "
-                    + "WHERE id = " + this.id + ";";
-            Statement stm = AIMSDB.getConnection().createStatement();
-            stm.executeUpdate(sql);
+                    + "title = ?, value = ?, price = ?, quantity = ?, category = ?, \"imageUrl\" = ?, type = ? "
+                    + "WHERE id = ?;";
+            PreparedStatement stm = AIMSDB.getConnection().prepareStatement(sql);
+            stm.setString(1, title);
+            stm.setInt(2, value);
+            stm.setInt(3, price);
+            stm.setInt(4, quantity);
+            stm.setString(5, category);
+            stm.setString(6, imageURL);
+            stm.setString(7, type);
+            stm.setInt(8, id);
+            stm.executeUpdate();
         }
+    }
+
+    public void delete(int id) throws SQLException {
+        String sql = "DELETE FROM Media WHERE id = ?;";
+        PreparedStatement stm = AIMSDB.getConnection().prepareStatement(sql);
+        stm.setInt(1, id);
+        stm.executeUpdate();
     }
 
     // getter and setter

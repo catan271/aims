@@ -28,4 +28,8 @@ public class MediaController extends BaseController {
     public void saveMedia(Media media) throws SQLException {
         media.save();
     }
+
+    public void deleteBookById(int id) throws SQLException {
+        new Book().delete(id);
+    }
 }

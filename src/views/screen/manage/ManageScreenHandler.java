@@ -27,15 +27,19 @@ public class ManageScreenHandler extends BaseScreenHandler implements Initializa
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         mediaManage.setOnAction(e -> {
-            MediaManageScreenHandler mediaManageScreen;
-            try {
-                mediaManageScreen = new MediaManageScreenHandler(this.stage, Configs.MEDIA_MANAGE_SCREEN_PATH);
-                mediaManageScreen.setHomeScreenHandler(this.home);
-                mediaManageScreen.setBController(new MediaController());
-                mediaManageScreen.show();
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
+            openMediaManage();
         });
+    }
+
+    protected void openMediaManage() {
+        MediaManageScreenHandler mediaManageScreen;
+        try {
+            mediaManageScreen = new MediaManageScreenHandler(this.stage, Configs.MEDIA_MANAGE_SCREEN_PATH);
+            mediaManageScreen.setHomeScreenHandler(this.home);
+            mediaManageScreen.setBController(new MediaController());
+            mediaManageScreen.show();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 }

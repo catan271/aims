@@ -58,7 +58,7 @@ public class BookFormScreenHandler extends MediaFormScreenHandler implements Ini
         String language = languageField.getText();
         String bookCategory = bookCategoryField.getText();
 
-        return new Book(media.getId(), media.getTitle(), media.getCategory(), media.getPrice(), media.getQuantity(), "book",
+        return new Book(media.getId(), media.getTitle(), media.getCategory(), media.getPrice(), media.getQuantity(), media.getImageURL(), "book",
                 author, coverType, publisher, publishDate, numOfPages, language, bookCategory);
     }
 
@@ -66,12 +66,12 @@ public class BookFormScreenHandler extends MediaFormScreenHandler implements Ini
         Book book = this.getBController().getBookById(id);
 
         if (book != null) {
-            super.setDefaultValues(book.getTitle(), book.getCategory(), book.getPrice(), book.getValue(), book.getQuantity());
+            super.setDefaultValues(book.getTitle(), book.getCategory(), book.getPrice(), book.getValue(), book.getQuantity(), book.getImageURL());
 
             authorField.setText(book.getAuthor());
             coverTypeField.setText(book.getCoverType());
             publisherField.setText(book.getPublisher());
-            publishDateField.setText(book.getPublishDate().toString());
+            if (book.getPublishDate() != null) publishDateField.setText(book.getPublishDate().toString());
             numOfPagesField.setText("" + book.getNumOfPages());
             languageField.setText(book.getLanguage());
             bookCategoryField.setText(book.getBookCategory());

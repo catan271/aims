@@ -1,5 +1,8 @@
 package entity.media;
 
+import entity.db.AIMSDB;
+
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
@@ -16,9 +19,9 @@ public class CD extends Media {
 
     }
 
-    public CD(int id, String title, String category, int price, int quantity, String type, String artist,
+    public CD(int id, String title, String category, int price, int quantity, String imageURL, String type, String artist,
               String recordLabel, String musicType, Date releasedDate) throws SQLException {
-        super(id, title, category, price, quantity, type);
+        super(id, title, category, price, quantity, imageURL, type);
         this.artist = artist;
         this.recordLabel = recordLabel;
         this.musicType = musicType;
@@ -71,20 +74,21 @@ public class CD extends Media {
 
     @Override
     public Media getMediaById(int id) throws SQLException {
-        String sql = "SELECT * FROM " +
-                "aims.CD " +
-                "INNER JOIN aims.Media " +
-                "ON Media.id = CD.id " +
-                "where Media.id = " + id + ";";
-        ResultSet res = stm.executeQuery(sql);
+        String sql = "SELECT * FROM Media "
+                + "LEFT JOIN CD ON Media.id = CD.id "
+                + "WHERE type = 'cd' AND Media.id = ?;";
+        PreparedStatement stm = AIMSDB.getConnection().prepareStatement(sql);
+        stm.setInt(1, id);
+        ResultSet res = stm.executeQuery();
         if (res.next()) {
 
             // from media table
-            String title = "";
+            String title = res.getString("title");
             String type = res.getString("type");
             int price = res.getInt("price");
             String category = res.getString("category");
             int quantity = res.getInt("quantity");
+            String imageURL = res.getString("imageUrl");
 
             // from CD table
             String artist = res.getString("artist");
@@ -92,7 +96,7 @@ public class CD extends Media {
             String musicType = res.getString("musicType");
             Date releasedDate = res.getDate("releasedDate");
 
-            return new CD(id, title, category, price, quantity, type,
+            return new CD(id, title, category, price, quantity, imageURL, type,
                     artist, recordLabel, musicType, releasedDate);
 
         } else {

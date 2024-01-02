@@ -2,11 +2,8 @@ package entity.media;
 
 import entity.db.AIMSDB;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
-import java.sql.Date;
 import java.util.List;
 
 public class Book extends Media {
@@ -23,10 +20,10 @@ public class Book extends Media {
 
     }
 
-    public Book(int id, String title, String category, int price, int quantity, String type, String author,
+    public Book(int id, String title, String category, int price, int quantity, String imageURL, String type, String author,
                 String coverType, String publisher, Date publishDate, int numOfPages, String language,
                 String bookCategory) {
-        super(id, title, category, price, quantity, type);
+        super(id, title, category, price, quantity, imageURL, type);
         this.author = author;
         this.coverType = coverType;
         this.publisher = publisher;
@@ -107,13 +104,12 @@ public class Book extends Media {
 
     @Override
     public Book getMediaById(int id) throws SQLException {
-        String sql = "SELECT * FROM " +
-                "Media " +
-                "LEFT JOIN Book " +
-                "ON Media.id = Book.id " +
-                "where Media.id = " + id + ";";
-        Statement stm = AIMSDB.getConnection().createStatement();
-        ResultSet res = stm.executeQuery(sql);
+        String sql = "SELECT * FROM Media "
+                + "LEFT JOIN Book ON Media.id = Book.id "
+                + "WHERE type = 'book' AND Media.id = ?;";
+        PreparedStatement stm = AIMSDB.getConnection().prepareStatement(sql);
+        stm.setInt(1, id);
+        ResultSet res = stm.executeQuery();
         if (res.next()) {
 
             // from Media table
@@ -122,17 +118,19 @@ public class Book extends Media {
             int price = res.getInt("price");
             String category = res.getString("category");
             int quantity = res.getInt("quantity");
+            String imageURL = res.getString("imageUrl");
 
             // from Book table
             String author = res.getString("author");
             String coverType = res.getString("coverType");
             String publisher = res.getString("publisher");
-            Date publishDate = Date.valueOf(res.getString("publishDate"));
+            String publishDateColumn = res.getString("publishDate");
+            Date publishDate = publishDateColumn != null ? Date.valueOf(publishDateColumn) : null;
             int numOfPages = res.getInt("numOfPages");
             String language = res.getString("language");
             String bookCategory = res.getString("bookCategory");
 
-            return new Book(id, title, category, price, quantity, type,
+            return new Book(id, title, category, price, quantity, imageURL, type,
                     author, coverType, publisher, publishDate, numOfPages, language, bookCategory);
 
         }
@@ -143,65 +141,89 @@ public class Book extends Media {
     public List<Media> getAllMedia() throws SQLException {
         List<Media> books = new ArrayList<Media>();
 
-        String sql = "SELECT * FROM " +
-                "Media " +
-                "LEFT JOIN Book " +
-                "ON Media.id = Book.id "
-                + "ORDER BY Media.id DESC "
-                + ";";
+        String sql = "SELECT * FROM Media "
+                + "LEFT JOIN Book ON Media.id = Book.id "
+                + "WHERE type = 'book'"
+                + "ORDER BY Media.id DESC;";
         Statement stm = AIMSDB.getConnection().createStatement();
         ResultSet res = stm.executeQuery(sql);
         while (res.next()) {
 
             // from Media table
+            int id = res.getInt("id");
             String title = res.getString("title");
             String type = res.getString("type");
             int price = res.getInt("price");
             String category = res.getString("category");
             int quantity = res.getInt("quantity");
+            String imageURL = res.getString("imageUrl");
 
             // from Book table
             String author = res.getString("author");
             String coverType = res.getString("coverType");
             String publisher = res.getString("publisher");
-            Date publishDate = res.getDate("publishDate");
+            String publishDateColumn = res.getString("publishDate");
+            Date publishDate = publishDateColumn != null ? Date.valueOf(publishDateColumn) : null;
             int numOfPages = res.getInt("numOfPages");
             String language = res.getString("language");
             String bookCategory = res.getString("bookCategory");
 
-            books.add(new Book(id, title, category, price, quantity, type,
+            books.add(new Book(id, title, category, price, quantity, imageURL, type,
                     author, coverType, publisher, publishDate, numOfPages, language, bookCategory));
 
         }
         return books;
     }
 
+    @Override
     public void create() throws SQLException {
         super.create();
         String sql = "INSERT INTO Book (id, author, coverType, publisher, \"publishDate\", \"numOfPages\", language, \"bookCategory\") "
-                + "VALUES (" + id + ",\'" + author + "\',\'" + coverType + "\',\'" + publisher + "\',\'" + publishDate + "\'," + numOfPages + ",\'" + language + "\',\'" + bookCategory + "\') "
+                + "VALUES (?,?,?,?,?,?,?,?) "
                 + ";";
-        Statement stm = AIMSDB.getConnection().createStatement();
-        stm.executeUpdate(sql);
+        PreparedStatement stm = AIMSDB.getConnection().prepareStatement(sql);
+        stm.setInt(1, id);
+        stm.setString(2, author);
+        stm.setString(3, coverType);
+        stm.setString(4, publisher);
+        stm.setString(5, publishDate.toString());
+        stm.setInt(6, numOfPages);
+        stm.setString(7, language);
+        stm.setString(8, bookCategory);
+        stm.executeUpdate();
     }
 
+    @Override
     public void save() throws SQLException {
         if (id == 0) {
             create();
         } else {
             super.save();
             String sql = "UPDATE Book SET "
-                    + "author = \'" + author + "\',"
-                    + "\"coverType\" = \'" + coverType + "\',"
-                    + "publisher = \'" + publisher + "\',"
-                    + "\"publishDate\" = \'" + publishDate + "\',"
-                    + "\"numOfPages\" = \'" + numOfPages + "\',"
-                    + "language = \'" + language + "\',"
-                    + "\"bookCategory\" = \'" + bookCategory + "\' "
-                    + "WHERE id = " + this.id + ";";
-            Statement stm = AIMSDB.getConnection().createStatement();
-            stm.executeUpdate(sql);
+                    + "author = ?, \"coverType\" = ?, publisher = ?, \"publishDate\" = ?, \"numOfPages\" = ?, language = ?, \"bookCategory\" = ? "
+                    + "WHERE id = ?;";
+            PreparedStatement stm = AIMSDB.getConnection().prepareStatement(sql);
+            stm.setString(1, author);
+            stm.setString(2, coverType);
+            stm.setString(3, publisher);
+            stm.setString(4, publishDate.toString());
+            stm.setInt(5, numOfPages);
+            stm.setString(6, language);
+            stm.setString(7, bookCategory);
+            stm.setInt(8, id);
+            int updated = stm.executeUpdate();
         }
+    }
+
+
+    @Override
+    public void delete(int id) throws SQLException {
+        String sql = "DELETE FROM Book WHERE id = ?;";
+        PreparedStatement stm = AIMSDB.getConnection().prepareStatement(sql);
+        stm.setInt(1, id);
+        stm.executeUpdate();
+
+        super.delete(id);
     }
 
     @Override
