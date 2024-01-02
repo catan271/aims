@@ -6,11 +6,13 @@ import controller.MediaController;
 import controller.ViewCartController;
 import entity.cart.Cart;
 import entity.media.Media;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
@@ -59,8 +61,8 @@ public class HomeScreenHandler extends BaseScreenHandler implements Initializabl
     @FXML
     private SplitMenuButton splitMenuBtnSearch;
 
-    @FXML
-    private Button manageButton;
+//    @FXML
+//    private Button manageButton;
 
     private List homeItems;
 
@@ -71,7 +73,7 @@ public class HomeScreenHandler extends BaseScreenHandler implements Initializabl
     public Label getNumMediaCartLabel() {
         return this.numMediaInCart;
     }
-    
+
     public HomeController getBController() {
         return (HomeController) super.getBController();
     }
@@ -81,7 +83,7 @@ public class HomeScreenHandler extends BaseScreenHandler implements Initializabl
         numMediaInCart.setText(String.valueOf(Cart.getCart().getListMedia().size()) + " media");
         super.show();
     }
-    
+
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         setBController(new HomeController());
@@ -119,7 +121,7 @@ public class HomeScreenHandler extends BaseScreenHandler implements Initializabl
         addMenuItem(1, "DVD", splitMenuBtnSearch);
         addMenuItem(2, "CD", splitMenuBtnSearch);
 
-        manageButton.setOnAction(e -> {
+        aimsImage.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             MediaManageScreenHandler mediaManageScreen;
             try {
                 LOGGER.info("User clicked to view manage button");
@@ -143,7 +145,7 @@ public class HomeScreenHandler extends BaseScreenHandler implements Initializabl
         Image img2 = new Image(file2.toURI().toString());
         cartImage.setImage(img2);
     }
-    
+
     public void addMediaHome(List items) {
         ArrayList mediaItems = (ArrayList) ((ArrayList) items).clone();
         hboxMedia.getChildren().forEach(node -> {
@@ -163,7 +165,7 @@ public class HomeScreenHandler extends BaseScreenHandler implements Initializabl
             return;
         }
     }
-    
+
     private void addMenuItem(int position, String text, MenuButton menuButton) {
         MenuItem menuItem = new MenuItem();
         Label label = new Label();

@@ -1,6 +1,7 @@
 package views.screen.manage.media.form;
 
 import controller.MediaController;
+import entity.media.Media;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -9,15 +10,17 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import utils.Configs;
+import views.screen.BaseScreenHandler;
 import views.screen.manage.ManageScreenHandler;
 import views.screen.manage.media.MediaManageScreenHandler;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class MediaFormScreenHandler extends ManageScreenHandler implements Initializable {
+public class MediaFormScreenHandler extends BaseScreenHandler implements Initializable {
     @FXML
     protected Label formTitle;
 
@@ -26,9 +29,6 @@ public class MediaFormScreenHandler extends ManageScreenHandler implements Initi
 
     @FXML
     protected TextField categoryField;
-
-    @FXML
-    protected TextField valueField;
 
     @FXML
     protected TextField priceField;
@@ -61,8 +61,6 @@ public class MediaFormScreenHandler extends ManageScreenHandler implements Initi
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        super.initialize(url, resourceBundle);
-
         cancelButton.setOnAction(e -> {
             try {
                 backScreen();
@@ -70,23 +68,28 @@ public class MediaFormScreenHandler extends ManageScreenHandler implements Initi
                 throw new RuntimeException(ex);
             }
         });
+
+        saveButton.setOnAction(e -> {
+            try {
+                save();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
     }
 
-    protected ArrayList<String> getMediaValues() {
-        ArrayList<String> valuesList = new ArrayList<String>();
+    protected void save() throws SQLException {
+        Media media = getMediaValues();
+        getBController().saveMedia(media);
+    }
+
+    protected Media getMediaValues() {
         String title = titleField.getText();
         String category = categoryField.getText();
-        String value = valueField.getText();
-        String price = priceField.getText();
-        String quantity = quantityField.getText();
+        int price = Integer.valueOf( priceField.getText());
+        int quantity = Integer.valueOf(quantityField.getText());
 
-        valuesList.add(title);
-        valuesList.add(category);
-        valuesList.add(price);
-        valuesList.add(value);
-        valuesList.add(quantity);
-
-        return valuesList;
+        return new Media(id, title, category,  price, quantity, "");
     }
 
     protected void backScreen() throws IOException {
@@ -99,7 +102,6 @@ public class MediaFormScreenHandler extends ManageScreenHandler implements Initi
         titleField.setText(title);
         categoryField.setText(category);
         priceField.setText(String.valueOf(price));
-        valueField.setText(String.valueOf(value));
         quantityField.setText(String.valueOf(quantity));
     }
 

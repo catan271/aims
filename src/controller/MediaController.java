@@ -21,7 +21,11 @@ public class MediaController extends BaseController {
         return new Media().getMediaById(id);
     }
 
-    public Media getBookById(int id) throws SQLException {
+    public Book getBookById(int id) throws SQLException {
         return new Book().getMediaById(id);
+    }
+
+    public void saveMedia(Media media) throws SQLException {
+        media.save();
     }
 }

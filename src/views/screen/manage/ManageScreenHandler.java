@@ -16,7 +16,7 @@ import java.util.ResourceBundle;
 
 public class ManageScreenHandler extends BaseScreenHandler implements Initializable {
     @FXML
-    private Button productButton;
+    private Button mediaManage;
 
     private HomeScreenHandler home;
 
@@ -26,7 +26,7 @@ public class ManageScreenHandler extends BaseScreenHandler implements Initializa
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        productButton.setOnAction(e -> {
+        mediaManage.setOnAction(e -> {
             MediaManageScreenHandler mediaManageScreen;
             try {
                 mediaManageScreen = new MediaManageScreenHandler(this.stage, Configs.MEDIA_MANAGE_SCREEN_PATH);
