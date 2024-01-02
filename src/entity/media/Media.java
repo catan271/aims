@@ -167,6 +167,13 @@ public class Media {
         this.type = type;
         return this;
     }
+
+    public int getValue() { return this.value; }
+
+    public Media setValue(int value) {
+        this.value = value;
+        return this;
+    }
     
     @Override
     public String toString() {
@@ -180,5 +187,4 @@ public class Media {
                 ", imageURL='" + imageURL + "'" +
                 "}";
     }
-
 }
