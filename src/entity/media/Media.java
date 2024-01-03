@@ -29,8 +29,12 @@ public class Media {
     protected String type;
     protected String imageURL;
 
-    public Media() throws SQLException {
-        stm = AIMSDB.getConnection().createStatement();
+    public Media() {
+        try {
+            stm = AIMSDB.getConnection().createStatement();
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     public Media(int id, String title, String category, int price, int quantity, String imageURL, String type) {
@@ -60,6 +64,15 @@ public class Media {
         return this;
     }
 
+    public Media from(ResultSet res) throws SQLException {
+        title = res.getString("title");
+        category = res.getString("category");
+        price = res.getInt("price");
+        quantity = res.getInt("quantity");
+        imageURL = res.getString("imageUrl");
+        type = res.getString("type");
+        return this;
+    }
 
     public Media getMediaById(int id) throws SQLException {
         String sql = "SELECT * FROM Media "
@@ -67,15 +80,7 @@ public class Media {
         Statement stm = AIMSDB.getConnection().createStatement();
         ResultSet res = stm.executeQuery(sql);
         if (res.next()) {
-
-            return new Media()
-                    .setId(res.getInt("id"))
-                    .setTitle(res.getString("title"))
-                    .setQuantity(res.getInt("quantity"))
-                    .setCategory(res.getString("category"))
-                    .setMediaURL(res.getString("imageUrl"))
-                    .setPrice(res.getInt("price"))
-                    .setType(res.getString("type"));
+            return new Media().from(res).setId(id);
         }
         return null;
     }
@@ -83,19 +88,12 @@ public class Media {
     public List<Media> getAllMedia() throws SQLException {
         Statement stm = AIMSDB.getConnection().createStatement();
         ResultSet res = stm.executeQuery("select * from Media ORDER BY id DESC;");
-        ArrayList medium = new ArrayList<>();
+        ArrayList listMedia = new ArrayList<>();
         while (res.next()) {
-            Media media = new Media()
-                    .setId(res.getInt("id"))
-                    .setTitle(res.getString("title"))
-                    .setQuantity(res.getInt("quantity"))
-                    .setCategory(res.getString("category"))
-                    .setMediaURL(res.getString("imageUrl"))
-                    .setPrice(res.getInt("price"))
-                    .setType(res.getString("type"));
-            medium.add(media);
+            Media media = new Media().from(res).setId(res.getInt("id"));
+            listMedia.add(media);
         }
-        return medium;
+        return listMedia;
     }
 
     public void updateMediaFieldById(String tbname, int id, String field, String value) throws SQLException {
@@ -110,7 +108,7 @@ public class Media {
         String sql = "INSERT INTO Media (title, value, price, quantity, category, \"imageUrl\", type) "
                 + "VALUES (?,?,?,?,?,?,?) "
                 + ";";
-        PreparedStatement stm = AIMSDB.getConnection().prepareStatement(sql, new String[] { "id" });
+        PreparedStatement stm = AIMSDB.getConnection().prepareStatement(sql, new String[]{"id"});
         stm.setString(1, title);
         stm.setInt(2, value);
         stm.setInt(3, price);
@@ -159,7 +157,7 @@ public class Media {
         return this.id;
     }
 
-    private Media setId(int id) {
+    public Media setId(int id) {
         this.id = id;
         return this;
     }

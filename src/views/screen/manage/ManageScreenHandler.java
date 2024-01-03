@@ -16,9 +16,12 @@ import java.util.ResourceBundle;
 
 public class ManageScreenHandler extends BaseScreenHandler implements Initializable {
     @FXML
-    private Button mediaManage;
+    protected Button mediaManage;
 
-    private HomeScreenHandler home;
+    @FXML
+    protected Button backHome;
+
+    protected HomeScreenHandler home;
 
     public ManageScreenHandler(Stage stage, String screenPath) throws IOException {
         super(stage, screenPath);
@@ -29,17 +32,31 @@ public class ManageScreenHandler extends BaseScreenHandler implements Initializa
         mediaManage.setOnAction(e -> {
             openMediaManage();
         });
+        backHome.setOnAction(e -> {
+            System.out.println("back home");
+            backToHome();
+        });
     }
 
     protected void openMediaManage() {
-        MediaManageScreenHandler mediaManageScreen;
         try {
-            mediaManageScreen = new MediaManageScreenHandler(this.stage, Configs.MEDIA_MANAGE_SCREEN_PATH);
+            MediaManageScreenHandler mediaManageScreen = new MediaManageScreenHandler(this.stage, Configs.MEDIA_MANAGE_SCREEN_PATH);
             mediaManageScreen.setHomeScreenHandler(this.home);
             mediaManageScreen.setBController(new MediaController());
             mediaManageScreen.show();
         } catch (IOException ex) {
             throw new RuntimeException(ex);
+        }
+    }
+
+    protected void backToHome() {
+        try {
+            HomeScreenHandler homeHandler = new HomeScreenHandler(stage, Configs.HOME_PATH);
+            homeHandler.setScreenTitle("Home Screen");
+            homeHandler.setImage();
+            homeHandler.show();
+        } catch (IOException e1) {
+            e1.printStackTrace();
         }
     }
 }

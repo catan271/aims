@@ -16,13 +16,11 @@ public class Book extends Media {
     String language;
     String bookCategory;
 
-    public Book() throws SQLException {
-
+    public Book() {
     }
 
     public Book(int id, String title, String category, int price, int quantity, String imageURL, String type, String author,
-                String coverType, String publisher, Date publishDate, int numOfPages, String language,
-                String bookCategory) {
+                String coverType, String publisher, Date publishDate, int numOfPages, String language, String bookCategory) {
         super(id, title, category, price, quantity, imageURL, type);
         this.author = author;
         this.coverType = coverType;
@@ -103,6 +101,21 @@ public class Book extends Media {
     }
 
     @Override
+    public Book from(ResultSet res) throws SQLException {
+        super.from(res);
+
+        author = res.getString("author");
+        coverType = res.getString("coverType");
+        publisher = res.getString("publisher");
+        String publishDateColumn = res.getString("publishDate");
+        publishDate = publishDateColumn != null ? Date.valueOf(publishDateColumn) : null;
+        numOfPages = res.getInt("numOfPages");
+        language = res.getString("language");
+        bookCategory = res.getString("bookCategory");
+        return this;
+    }
+
+    @Override
     public Book getMediaById(int id) throws SQLException {
         String sql = "SELECT * FROM Media "
                 + "LEFT JOIN Book ON Media.id = Book.id "
@@ -111,28 +124,9 @@ public class Book extends Media {
         stm.setInt(1, id);
         ResultSet res = stm.executeQuery();
         if (res.next()) {
-
-            // from Media table
-            String title = res.getString("title");
-            String type = res.getString("type");
-            int price = res.getInt("price");
-            String category = res.getString("category");
-            int quantity = res.getInt("quantity");
-            String imageURL = res.getString("imageUrl");
-
-            // from Book table
-            String author = res.getString("author");
-            String coverType = res.getString("coverType");
-            String publisher = res.getString("publisher");
-            String publishDateColumn = res.getString("publishDate");
-            Date publishDate = publishDateColumn != null ? Date.valueOf(publishDateColumn) : null;
-            int numOfPages = res.getInt("numOfPages");
-            String language = res.getString("language");
-            String bookCategory = res.getString("bookCategory");
-
-            return new Book(id, title, category, price, quantity, imageURL, type,
-                    author, coverType, publisher, publishDate, numOfPages, language, bookCategory);
-
+            Book book = new Book().from(res);
+            book.setId(id);
+            return book;
         }
         return null;
     }
@@ -141,36 +135,16 @@ public class Book extends Media {
     public List<Media> getAllMedia() throws SQLException {
         List<Media> books = new ArrayList<Media>();
 
-        String sql = "SELECT * FROM Media "
+        String sql = "SELECT *, Media.id AS media_id FROM Media "
                 + "LEFT JOIN Book ON Media.id = Book.id "
                 + "WHERE type = 'book'"
                 + "ORDER BY Media.id DESC;";
         Statement stm = AIMSDB.getConnection().createStatement();
         ResultSet res = stm.executeQuery(sql);
         while (res.next()) {
-
-            // from Media table
-            int id = res.getInt("id");
-            String title = res.getString("title");
-            String type = res.getString("type");
-            int price = res.getInt("price");
-            String category = res.getString("category");
-            int quantity = res.getInt("quantity");
-            String imageURL = res.getString("imageUrl");
-
-            // from Book table
-            String author = res.getString("author");
-            String coverType = res.getString("coverType");
-            String publisher = res.getString("publisher");
-            String publishDateColumn = res.getString("publishDate");
-            Date publishDate = publishDateColumn != null ? Date.valueOf(publishDateColumn) : null;
-            int numOfPages = res.getInt("numOfPages");
-            String language = res.getString("language");
-            String bookCategory = res.getString("bookCategory");
-
-            books.add(new Book(id, title, category, price, quantity, imageURL, type,
-                    author, coverType, publisher, publishDate, numOfPages, language, bookCategory));
-
+            Book book = new Book().from(res);
+            book.setId(res.getInt("media_id"));
+            books.add(book);
         }
         return books;
     }
@@ -214,7 +188,6 @@ public class Book extends Media {
             int updated = stm.executeUpdate();
         }
     }
-
 
     @Override
     public void delete(int id) throws SQLException {

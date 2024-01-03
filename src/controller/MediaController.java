@@ -8,28 +8,29 @@ import javafx.collections.ObservableList;
 import java.sql.SQLException;
 
 public class MediaController extends BaseController {
-    /**
-     * This method gets all Media in DB and return back to home to display
-     * @return
-     * @throws SQLException
-     */
+    Media media;
+
+    public MediaController() {
+        media = new Media();
+    }
+
+    public MediaController(Media media) {
+        this.media = media;
+    }
+
     public ObservableList<Media> getAllMedia() throws SQLException {
-        return FXCollections.observableArrayList(new Media().getAllMedia());
+        return FXCollections.observableArrayList(media.getAllMedia());
     }
 
     public Media getMediaById(int id) throws SQLException {
-        return new Media().getMediaById(id);
-    }
-
-    public Book getBookById(int id) throws SQLException {
-        return new Book().getMediaById(id);
+        return media.getMediaById(id);
     }
 
     public void saveMedia(Media media) throws SQLException {
         media.save();
     }
 
-    public void deleteBookById(int id) throws SQLException {
-        new Book().delete(id);
+    public void deleteMediaById(int id) throws SQLException {
+        media.delete(id);
     }
 }

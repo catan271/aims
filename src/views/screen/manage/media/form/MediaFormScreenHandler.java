@@ -52,7 +52,7 @@ public class MediaFormScreenHandler extends BaseScreenHandler implements Initial
     protected Button cancelButton;
 
     protected int id;
-    protected String uploadedFilePath;
+    protected String uploadedFilePath = "";
 
     public void setId(int id) {
         this.id = id;

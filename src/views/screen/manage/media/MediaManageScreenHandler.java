@@ -1,6 +1,9 @@
 package views.screen.manage.media;
 
 import controller.MediaController;
+import entity.media.Book;
+import entity.media.CD;
+import entity.media.DVD;
 import entity.media.Media;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -15,6 +18,8 @@ import utils.Configs;
 import utils.Utils;
 import views.screen.manage.ManageScreenHandler;
 import views.screen.manage.media.form.BookFormScreenHandler;
+import views.screen.manage.media.form.CDFormScreenHandler;
+import views.screen.manage.media.form.DVDFormScreenHandler;
 
 import java.io.IOException;
 import java.net.URL;
@@ -24,9 +29,9 @@ import java.util.logging.Logger;
 
 public class MediaManageScreenHandler extends ManageScreenHandler implements Initializable {
     public static Logger LOGGER = Utils.getLogger(ManageScreenHandler.class.getName());
-    private final String BOOK = "Book";
-    private final String DVD = "DVD";
-    private final String CD = "CD";
+    private final String BOOK = "book";
+    private final String DVD = "dvd";
+    private final String CD = "cd";
 
     @FXML
     private ComboBox addComboBox;
@@ -61,6 +66,10 @@ public class MediaManageScreenHandler extends ManageScreenHandler implements Ini
     @FXML
     private TableColumn<Media, Media> actionsColumn;
 
+    private MediaController bookController;
+    private MediaController cdController;
+    private MediaController dvdController;
+
     public MediaController getBController() {
         return (MediaController) super.getBController();
     }
@@ -71,14 +80,26 @@ public class MediaManageScreenHandler extends ManageScreenHandler implements Ini
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        super.initialize(url, resourceBundle);
         super.setBController(new MediaController());
+        bookController = new MediaController(new Book());
+        cdController = new MediaController(new CD());
+        dvdController = new MediaController(new DVD());
         ObservableList<String> addComboBoxItems = FXCollections.observableArrayList(BOOK, DVD, CD);
         addComboBox.setItems(addComboBoxItems);
         addComboBox.setOnAction(e -> {
             String type = addComboBox.getSelectionModel().getSelectedItem().toString();
             switch (type) {
-                case (BOOK): {
+                case BOOK: {
                     redirectToBookForm(0);
+                    break;
+                }
+                case CD: {
+                    redirectToCDForm(0);
+                    break;
+                }
+                case DVD: {
+                    redirectToDVDForm(0);
                     break;
                 }
             }
@@ -108,19 +129,50 @@ public class MediaManageScreenHandler extends ManageScreenHandler implements Ini
                 HBox buttonsHBox = new HBox(editButton, deleteButton);
 
                 switch (media.getType()) {
-                    case "book": {
+                    case BOOK: {
                         editButton.setOnAction(e -> {
                             redirectToBookForm(media.getId());
                         });
 
                         deleteButton.setOnAction(e -> {
                             try {
-                                getBController().deleteBookById(media.getId());
+                                bookController.deleteMediaById(media.getId());
                                 openMediaManage();
                             } catch (SQLException ex) {
                                 throw new RuntimeException(ex);
                             }
                         });
+                        break;
+                    }
+                    case CD: {
+                        editButton.setOnAction(e -> {
+                            redirectToCDForm(media.getId());
+                        });
+
+                        deleteButton.setOnAction(e -> {
+                            try {
+                                cdController.deleteMediaById(media.getId());
+                                openMediaManage();
+                            } catch (SQLException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                        });
+                        break;
+                    }
+                    case DVD: {
+                        editButton.setOnAction(e -> {
+                            redirectToDVDForm(media.getId());
+                        });
+
+                        deleteButton.setOnAction(e -> {
+                            try {
+                                dvdController.deleteMediaById(media.getId());
+                                openMediaManage();
+                            } catch (SQLException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                        });
+                        break;
                     }
                 }
 
@@ -139,7 +191,7 @@ public class MediaManageScreenHandler extends ManageScreenHandler implements Ini
         try {
             BookFormScreenHandler bookFormScreen = new BookFormScreenHandler(this.stage, Configs.BOOK_FORM_SCREEN_PATH);
             bookFormScreen.setId(id);
-            bookFormScreen.setBController(new MediaController());
+            bookFormScreen.setBController(bookController);
             bookFormScreen.setDefaultBookValues();
             if (id != 0) {
                 bookFormScreen.setFormTitle("Edit book");
@@ -147,6 +199,44 @@ public class MediaManageScreenHandler extends ManageScreenHandler implements Ini
                 bookFormScreen.setFormTitle("Add book");
             }
             bookFormScreen.show();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void redirectToCDForm(int id) {
+        try {
+            CDFormScreenHandler cdFormScreen = new CDFormScreenHandler(this.stage, Configs.CD_FORM_SCREEN_PATH);
+            cdFormScreen.setId(id);
+            cdFormScreen.setBController(cdController);
+            cdFormScreen.setDefaultCDValues();
+            if (id != 0) {
+                cdFormScreen.setFormTitle("Edit CD");
+            } else  {
+                cdFormScreen.setFormTitle("Add CD");
+            }
+            cdFormScreen.show();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void redirectToDVDForm(int id) {
+        try {
+            DVDFormScreenHandler dvdFormScreen = new DVDFormScreenHandler(this.stage, Configs.DVD_FORM_SCREEN_PATH);
+            dvdFormScreen.setId(id);
+            dvdFormScreen.setBController(dvdController);
+            dvdFormScreen.setDefaultDVDValues();
+            if (id != 0) {
+                dvdFormScreen.setFormTitle("Edit DVD");
+            } else  {
+                dvdFormScreen.setFormTitle("Add DVD");
+            }
+            dvdFormScreen.show();
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         } catch (SQLException e) {

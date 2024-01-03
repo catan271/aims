@@ -5,6 +5,7 @@ import entity.media.Book;
 import entity.media.Media;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import utils.Utils;
@@ -13,24 +14,25 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 public class BookFormScreenHandler extends MediaFormScreenHandler implements Initializable {
 
     @FXML
-    private TextField authorField;
+    protected TextField authorField;
     @FXML
-    private TextField coverTypeField;
+    protected TextField coverTypeField;
     @FXML
-    private TextField publisherField;
+    protected TextField publisherField;
     @FXML
-    private TextField publishDateField;
+    protected DatePicker publishDateField;
     @FXML
-    private TextField numOfPagesField;
+    protected TextField numOfPagesField;
     @FXML
-    private TextField languageField;
+    protected TextField languageField;
     @FXML
-    private TextField bookCategoryField;
+    protected TextField bookCategoryField;
 
     public BookFormScreenHandler(Stage stage, String screenPath) throws IOException {
         super(stage, screenPath);
@@ -53,7 +55,7 @@ public class BookFormScreenHandler extends MediaFormScreenHandler implements Ini
         String author = authorField.getText();
         String coverType = coverTypeField.getText();
         String publisher = publisherField.getText();
-        Date publishDate = Date.valueOf(publishDateField.getText());
+        Date publishDate = Date.valueOf(publishDateField.getValue().toString());
         int numOfPages = Integer.valueOf(numOfPagesField.getText());
         String language = languageField.getText();
         String bookCategory = bookCategoryField.getText();
@@ -63,7 +65,7 @@ public class BookFormScreenHandler extends MediaFormScreenHandler implements Ini
     }
 
     public void setDefaultBookValues() throws SQLException {
-        Book book = this.getBController().getBookById(id);
+        Book book = (Book)this.getBController().getMediaById(id);
 
         if (book != null) {
             super.setDefaultValues(book.getTitle(), book.getCategory(), book.getPrice(), book.getValue(), book.getQuantity(), book.getImageURL());
@@ -71,7 +73,7 @@ public class BookFormScreenHandler extends MediaFormScreenHandler implements Ini
             authorField.setText(book.getAuthor());
             coverTypeField.setText(book.getCoverType());
             publisherField.setText(book.getPublisher());
-            if (book.getPublishDate() != null) publishDateField.setText(book.getPublishDate().toString());
+            if (book.getPublishDate() != null) publishDateField.setValue(LocalDate.parse(book.getPublishDate().toString()));
             numOfPagesField.setText("" + book.getNumOfPages());
             languageField.setText(book.getLanguage());
             bookCategoryField.setText(book.getBookCategory());
